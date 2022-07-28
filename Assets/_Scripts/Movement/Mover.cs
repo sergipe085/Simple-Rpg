@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 namespace RPG.Movement
 {
-    public class Mover : MonoBehaviour
+    public class Mover : MonoBehaviour, IAction
     {
         [Header("--- CORE COMPONENTS ---")]
         private NavMeshAgent agent = null;
@@ -24,6 +24,11 @@ namespace RPG.Movement
         public void MoveTo(Vector3 destination) {
             NavMesh.SamplePosition(destination, out NavMeshHit navHit, float.MaxValue, NavMesh.AllAreas);
             agent.SetDestination(navHit.position);
+            agent.isStopped = false;
+        }
+
+        public void Stop() {
+            agent.isStopped = true;
         }
 
         private void UpdateAnimator() {
@@ -37,6 +42,10 @@ namespace RPG.Movement
         private void UpdateRotation() {
             Vector3 direction = agent.desiredVelocity.normalized;
             transform.forward = Vector3.Lerp(transform.forward, direction, 10f * Time.deltaTime);
+        }
+
+        public void Cancel() {
+            Stop();
         }
     }
 }
