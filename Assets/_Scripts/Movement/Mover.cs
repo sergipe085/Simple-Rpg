@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using RPG.Core;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -10,15 +11,22 @@ namespace RPG.Movement
         [Header("--- CORE COMPONENTS ---")]
         private NavMeshAgent agent = null;
         private Animator animator = null;
+        private ActionScheduler actionScheduler = null;
 
         private void Awake() {
             agent = GetComponent<NavMeshAgent>();
             animator = GetComponent<Animator>();
+            actionScheduler = GetComponent<ActionScheduler>();
         }
 
         private void Update() {
             UpdateAnimator();
             UpdateRotation();
+        }
+
+        public void StartMoveAction(Vector3 destination) {
+            actionScheduler.StartAction(this);
+            MoveTo(destination);
         }
 
         public void MoveTo(Vector3 destination) {

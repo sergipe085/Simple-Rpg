@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using RPG.Movement;
 using RPG.Combat;
-using RPG.Core;
 
 namespace RPG.Control 
 {
@@ -12,12 +11,10 @@ namespace RPG.Control
         [Header("--- CORE COMPONENTS ---")]
         private Mover mover = null;
         private Fighter fighter = null;
-        private ActionScheduler actionScheduler = null;
 
         private void Awake() {
             mover = GetComponent<Mover>();
             fighter = GetComponent<Fighter>();
-            actionScheduler = GetComponent<ActionScheduler>();
         }
 
         private void Update() {
@@ -30,7 +27,6 @@ namespace RPG.Control
             foreach(RaycastHit hit in hits) {
                 if (hit.transform.TryGetComponent<CombatTarget>(out CombatTarget combatTarget)) {
                     if (Input.GetMouseButtonDown(0)) {
-                        actionScheduler.StartAction(fighter);
                         fighter.Attack(combatTarget);
                     }
                     return true;
@@ -45,8 +41,7 @@ namespace RPG.Control
             if (!Physics.Raycast(GetMouseRay(), out RaycastHit hit, float.MaxValue)) return false;
 
             if (Input.GetMouseButton(0)) {
-                actionScheduler.StartAction(mover);
-                mover.MoveTo(hit.point);
+                mover.StartMoveAction(hit.point);
             }
 
             return true;
