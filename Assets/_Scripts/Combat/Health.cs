@@ -10,6 +10,10 @@ public class Health : MonoBehaviour
 
     public event Action OnDieEvent = null;
 
+    public bool IsDead() {
+        return isDead;
+    }
+
     public void TakeDamage(float damage) {        
         health = Mathf.Max(health - damage, 0);
 
