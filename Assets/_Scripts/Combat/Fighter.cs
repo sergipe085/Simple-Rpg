@@ -62,7 +62,10 @@ namespace RPG.Combat
 
         //Animation event
         private void Hit() {
+            if (!target) return;
 
+            Health targetHealth = target.GetComponent<Health>();
+            targetHealth.TakeDamage(10);
         }
     }
 }
