@@ -11,6 +11,7 @@ namespace RPG.Control
         [Header("--- CORE COMPONENTS ---")]
         private Mover mover = null;
         private Fighter fighter = null;
+        [SerializeField] private LayerMask groundLayer;
 
         private void Awake() {
             mover = GetComponent<Mover>();
@@ -26,6 +27,8 @@ namespace RPG.Control
             RaycastHit[] hits = Physics.RaycastAll(GetMouseRay());
             foreach(RaycastHit hit in hits) {
                 if (hit.transform.TryGetComponent<CombatTarget>(out CombatTarget combatTarget)) {
+                    if (!fighter.CanAttack(combatTarget)) continue;
+                    
                     if (Input.GetMouseButtonDown(0)) {
                         fighter.Attack(combatTarget);
                     }
@@ -38,7 +41,7 @@ namespace RPG.Control
 
         private bool HandleMovement()
         {
-            if (!Physics.Raycast(GetMouseRay(), out RaycastHit hit, float.MaxValue)) return false;
+            if (!Physics.Raycast(GetMouseRay(), out RaycastHit hit, float.MaxValue, groundLayer)) return false;
 
             if (Input.GetMouseButton(0)) {
                 mover.StartMoveAction(hit.point);

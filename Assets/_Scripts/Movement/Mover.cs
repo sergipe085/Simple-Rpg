@@ -49,6 +49,9 @@ namespace RPG.Movement
 
         private void UpdateRotation() {
             Vector3 direction = agent.desiredVelocity.normalized;
+
+            if (direction == Vector3.zero) return;
+
             transform.forward = Vector3.Lerp(transform.forward, direction, 10f * Time.deltaTime);
         }
 

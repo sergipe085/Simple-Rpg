@@ -46,6 +46,7 @@ namespace RPG.Combat
         }
 
         private void AttackBehaviour() {
+            LookToTarget();
             if (attackTimer >= timeBeetwenAttacks) {
                 attackTimer = 0f;
                 animator.SetTrigger(Settings.attack);
@@ -55,6 +56,14 @@ namespace RPG.Combat
 
         private bool GetIsInRange() {
             return Vector3.Distance(transform.position, target.transform.position) <= weaponRange;
+        }
+
+        public bool CanAttack(CombatTarget combatTarget) {
+            if (!combatTarget) return false;
+            
+            Health combatTargetHealth = combatTarget.GetComponent<Health>();
+            
+            return !combatTargetHealth.IsDead();
         }
 
         public void Attack(CombatTarget combatTarget) {
@@ -73,6 +82,15 @@ namespace RPG.Combat
             if (!target) return;
 
             target.TakeDamage(10);
+        }
+
+        private void LookToTarget() {
+            if (!target) return;
+
+            Vector3 direction = (target.transform.position - transform.position).normalized;
+            direction.y = 0f;
+            
+            transform.forward = Vector3.Lerp(transform.forward, direction, 20f * Time.deltaTime);
         }
     }
 }
